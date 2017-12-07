@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link class="jsbin" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
+
+    <!-- java script code -->
+    <script type="text/javascript" language="javascript" >
+
+        var c = document.getElementById("imageCanvas");
+        var ctx = c.getContext("2d");
+        // Preview the image on the page
+        /*function readURL(input) {
+            if (input.files && input.files[0]) 
+            {
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    $('#uploadedImage')
+                        .attr('src', e.target.result)
+                        .width(300)
+                        .height(300);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+                //ctx.putImageData(input.files[0], 10, 10);
+            }
+        }*/
+
+        function serializeImage(input){
+            //serialize image
+            var canvas = document.getElementById('imageCanvas');
+            var dataURL = canvas.toDataURL();
+            
+            if (input.files && input.files[0]) 
+            {
+                //send to rest
+                var xhttp = new XMLHttpRequest();
+                //xhttp.open("POST", "leafrec.caesar-lynx.de/imageReceive", true);
+                xhttp.open("POST", "127.0.0.1:5000/imageReceive", true);
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send();
+                var response = JSON.parse(xhttp.responseText);
+            }
+        }
+    </script>
+
+    <meta charset="UTF-8">
+    <title>Leaf Recognition</title>
+</head>
+
+<body>
+    <div>
+    <h1 style="text-align: center;"><strong>Leaf Recognition</strong></h1>
+
+    <!--<img id="uploadedImage" align="center" src="#"/>-->
+
+    <br><br><br>
+    <form id="formID" name="imageForm" action="{{ url_for('imageReceive') }}" enctype="multipart/form-data" method="post">
+        <label>Wählen Sie ein Bild (*.jpg, *.png usw.) von Ihrem Gerät aus.</label>
+        <input name"imageInput" type="file" size="100%" accept="image/*">
+        <br>
+        <input type="submit" value="Upload"/>
+        <!--  onchange="readURL(this);" onclick="serializeImage()" -->
+    </form>
+    </div>
+</body>
+
+</html>
